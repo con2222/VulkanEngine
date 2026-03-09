@@ -10,6 +10,11 @@ namespace lve {
         public:
             LveWindow(int w, int h, std::string name);
             ~LveWindow();
+
+            LveWindow(const LveWindow&) = delete;
+            LveWindow& operator=(const LveWindow&) = delete;
+
+            bool shouldClose() { return glfwWindowShouldClose(window); }
         private:
 
             void initWindow();

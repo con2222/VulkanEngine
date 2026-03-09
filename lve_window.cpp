@@ -5,9 +5,16 @@ namespace lve {
         initWindow();
     }
 
+    LveWindow::~LveWindow() {
+        glfwDestroyWindow(window);
+        glfwTerminate();
+    }
+
     void LveWindow::initWindow() {
         glfwInit(); // initialize glfw lib
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // not to create opengl context
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
+        window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
     }
 }

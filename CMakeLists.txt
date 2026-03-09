@@ -13,7 +13,7 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(external/glfw)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp lve_window.cpp first_app.cpp)
 
 # 4. Подключаем заголовочные файлы GLM
 # Указываем путь к папке external, чтобы писать в коде #include <glm/glm.hpp>
