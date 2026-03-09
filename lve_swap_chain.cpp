@@ -50,6 +50,10 @@ LveSwapChain::~LveSwapChain() {
     vkDestroySemaphore(device.device(), imageAvailableSemaphores[i], nullptr);
     vkDestroyFence(device.device(), inFlightFences[i], nullptr);
   }
+
+  // for (size_t i = 0; i < renderFinishedSemaphores.size(); i++) {
+  //   vkDestroySemaphore(device.device(), renderFinishedSemaphores[i], nullptr);
+  // }
 }
 
 VkResult LveSwapChain::acquireNextImage(uint32_t *imageIndex) {
