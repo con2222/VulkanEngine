@@ -44,7 +44,9 @@ endforeach()
 
 add_custom_target(CompileShaders DEPENDS ${SPIRV_SHADERS})
 
-add_executable(${PROJECT_NAME} main.cpp lve_window.cpp first_app.cpp lve_pipeline.cpp lve_device.cpp lve_swap_chain.cpp)
+add_executable(${PROJECT_NAME} main.cpp lve_window.cpp first_app.cpp lve_pipeline.cpp lve_device.cpp lve_swap_chain.cpp
+        lve_model.cpp
+        lve_model.hpp)
 add_dependencies(${PROJECT_NAME} CompileShaders)
 
 # 4. Подключаем заголовочные файлы GLM

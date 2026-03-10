@@ -4,8 +4,32 @@
 #include <stdexcept>
 #include <array>
 
+// libs
+#include "glm/glm.hpp"
+
+glm::vec2 midpoint(glm::vec2 p1, glm::vec2 p2) {
+    return (p1 + p2) * 0.5f;
+}
+
+void generateSierpinski(std::vector<lve::LveModel::Vertex>& vertices, int level, glm::vec2 a, glm::vec2 b, glm::vec2 c) {
+    if (level == 0) {
+        vertices.push_back({a});
+        vertices.push_back({b});
+        vertices.push_back({c});
+    } else {
+        glm::vec2 ab = midpoint(a, b);
+        glm::vec2 bc = midpoint(b, c);
+        glm::vec2 ca = midpoint(c, a);
+
+        generateSierpinski(vertices, level - 1, a, ab, ca);
+        generateSierpinski(vertices, level - 1, ab, b, bc);
+        generateSierpinski(vertices, level - 1, ca, bc, c);
+    }
+}
+
 namespace lve {
     FirstApp::FirstApp() {
+        loadModels();
         createPipelineLayout();
         createPipeline();
         createCommandBuffers();
@@ -22,6 +46,26 @@ namespace lve {
         }
 
         vkDeviceWaitIdle(lveDevice.device()); // block CPU until all gpu operations get completed
+    }
+
+    void FirstApp::loadModels() {
+        /*std::vector<LveModel::Vertex> vertices{
+            {{0.0f, -0.5f}},
+            {{0.5f, 0.5f}},
+            {{-0.5f, 0.5f}},
+        };*/
+
+        std::vector<LveModel::Vertex> vertices;
+
+        generateSierpinski(
+            vertices,
+            10,
+            {0.0f, -0.5f},
+            {0.5f, 0.5f},
+            {-0.5f, 0.5f}
+        );
+
+        lveModel = std::make_unique<LveModel>(lveDevice, vertices);
     }
 
     void FirstApp::createPipelineLayout() {
@@ -87,7 +131,8 @@ namespace lve {
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
             lvePipeline->bind(commandBuffers[i]);
-            vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+            lveModel->bind(commandBuffers[i]);
+            lveModel->draw(commandBuffers[i]);
 
             vkCmdEndRenderPass(commandBuffers[i]);
 
