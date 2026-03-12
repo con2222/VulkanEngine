@@ -3,11 +3,8 @@ project(VulkanEngine)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# 1. Находим ядро Vulkan (CMake сам найдет SDK, который мы установили)
 find_package(Vulkan REQUIRED)
 
-# 2. Подключаем GLFW из исходников
-# Отключаем сборку документации и тестов GLFW, чтобы они не засоряли проект
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -33,7 +30,6 @@ foreach(SHADER ${SHADERS})
     set(SPIRV_FILE ${SHADER_BIN_DIR}/${FILE_NAME}.spv)
     list(APPEND SPIRV_SHADERS ${SPIRV_FILE})
 
-    # Эта команда говорит CMake: "Как именно сделать .spv из исходника"
     add_custom_command(
             OUTPUT ${SPIRV_FILE}
             COMMAND ${GLSLC_EXECUTABLE} ${SHADER} -o ${SPIRV_FILE}
@@ -46,13 +42,11 @@ add_custom_target(CompileShaders DEPENDS ${SPIRV_SHADERS})
 
 add_executable(${PROJECT_NAME} main.cpp lve_window.cpp first_app.cpp lve_pipeline.cpp lve_device.cpp lve_swap_chain.cpp
         lve_model.cpp
-        lve_model.hpp)
+        lve_model.hpp
+        lve_game_object.cpp
+        lve_game_object.h)
 add_dependencies(${PROJECT_NAME} CompileShaders)
 
-# 4. Подключаем заголовочные файлы GLM
-# Указываем путь к папке external, чтобы писать в коде #include <glm/glm.hpp>
 target_include_directories(${PROJECT_NAME} PRIVATE external)
 
-
-# 5. Линкуем всё вместе (Твой код + Vulkan + GLFW)
 target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan glfw)
