@@ -2,6 +2,7 @@
 
 // std
 #include <cassert>
+#include <cstring>
 
 namespace lve {
     std::vector<VkVertexInputBindingDescription> LveModel::Vertex::getBindingDescriptions() {
